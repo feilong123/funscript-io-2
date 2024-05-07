@@ -78,6 +78,14 @@ const AppList = (): JSX.Element => {
         setFunscriptInfo(
             funscripts
                 .map(f => {
+                    // 第一个动作的时间 应该为第一个pos非50的 前一个动作的时间
+                    let firstActionAt = 0;
+                    for (let i = 0; i < f.actions.length; i++) {
+                        if (f.actions[i].pos !== 50) {
+                            firstActionAt = f.actions[i-1].at;
+                            break;
+                        }
+                    }
                     return {
                         title: f.metadata?.title + '.funscript' || "" + '.funscript',
                         averageSpeed: f.metadata?.average_speed || 0,
@@ -85,7 +93,7 @@ const AppList = (): JSX.Element => {
                         minSpeed: f.metadata?.min_speed || 0,
                         actionCount: f.actions.length || 0,
                         duration: f.actions.slice(-1)[0].at,
-                        firstActionAt: f.actions[0].at,
+                        firstActionAt: firstActionAt,
                         funscript: f,
                     };
                 })
@@ -110,13 +118,14 @@ const AppList = (): JSX.Element => {
                     {/* <span className="text-right">
                         {numeral(info.duration / 1000).format("00:00:00")}
                     </span> */}
+                    <span className="col-span-2">{numeral(info.firstActionAt / 1000).format("00:00:00")}</span>
                     <span className="col-span-2">{info.actionCount}</span>
                     <span className="col-span-2" style={{ color: colorString }}>
                         {Math.round(info.maxSpeed)} unit/s
                     </span>
-                    <span className="col-span-2" style={{ color: colorString }}>
+                    {/* <span className="col-span-2" style={{ color: colorString }}>
                         {Math.round(info.minSpeed)} unit/s
-                    </span>
+                    </span> */}
                     <span className="col-span-2" style={{ color: colorString }}>
                         {Math.round(info.averageSpeed)} unit/s
                     </span>
@@ -162,10 +171,11 @@ const AppList = (): JSX.Element => {
                                 <li className="flex flex-col border border-black rounded">
                                     <div className="w-full grid grid-cols-12 items-center h-8 text-sm px-4 font-bold bg-neutral-800">
                                         <span className="col-span-4">Filename</span>
+                                        <span className="col-span-2">firstActionAt</span>
                                         <span className="col-span-2">Action Count</span>
                                         {/* <span className="text-right">Duration</span> */}
                                         <span className="col-span-2">Max Speed</span>
-                                        <span className="col-span-2">Min Speed</span>
+                                        {/* <span className="col-span-2">Min Speed</span> */}
                                         <span className="col-span-2">Average Speed</span>
                                     </div>
                                 </li>
