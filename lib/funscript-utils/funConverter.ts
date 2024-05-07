@@ -29,12 +29,21 @@ export const addFunscriptMetadata = (funscript: Funscript): Funscript => {
         }, 0) /
         (output.actions.length - 1);
     
-    // 最大速度
-    const maxSpeed = output.actions.reduce((acc, action, index) => {
+    // 最大速度 打印最大速度 以及 最大速度的的action.at
+    const maxSpeedData = output.actions.reduce((acc, action, index) => {
         if (index === 0) return acc;
         const speed = getSpeed(output.actions[index - 1], output.actions[index]);
-        return Math.max(acc, speed);
-    }, 0);
+        if (speed > acc.maxSpeed) {
+            return { maxSpeed: speed, maxSpeedAt: action.at };
+        } else {
+            return acc;
+        }
+    }, { maxSpeed: 0, maxSpeedAt: null });
+
+    const maxSpeed = maxSpeedData.maxSpeed;
+    
+    console.log(`最大速度: ${maxSpeedData.maxSpeed}`);
+    console.log(`最大速度的action.at: ${maxSpeedData.maxSpeedAt}`);
 
     // 最小速度
     const minSpeed = output.actions.reduce((acc, action, index) => {
