@@ -86,7 +86,7 @@ const AppList = (): JSX.Element => {
                     };
                 })
                 .filter(notEmpty)
-                .filter(f => f.duration >= minLength * 60000)
+                // .filter(f => f.duration >= minLength * 600)
                 .sort((a, b) => (a.averageSpeed || 0) - (b.averageSpeed || 0))
         );
 
