@@ -99,7 +99,17 @@ const AppList = (): JSX.Element => {
                 })
                 .filter(notEmpty)
                 // .filter(f => f.duration >= minLength * 600)
-                .sort((a, b) => (a.averageSpeed || 0) - (b.averageSpeed || 0))
+                // .sort((a, b) => (a.averageSpeed || 0) - (b.averageSpeed || 0))
+                // 文件名含有~simple的文件排在前面
+                .sort((a, b) => {
+                    if (a.title.includes("~simple") && !b.title.includes("~simple")) {
+                        return -1;
+                    }
+                    if (!a.title.includes("~simple") && b.title.includes("~simple")) {
+                        return 1;
+                    }
+                    return 0;
+                })
         );
 
         setRendering(false);
