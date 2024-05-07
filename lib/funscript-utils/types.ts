@@ -6,6 +6,8 @@ export interface Funscript {
 export interface FunscriptMetadata {
     duration?: number;
     average_speed?: number;
+    max_speed?: number;
+    min_speed?: number;
     creator?: string;
     description?: string;
     license?: string;

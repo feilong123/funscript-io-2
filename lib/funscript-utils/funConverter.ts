@@ -20,7 +20,7 @@ export const addFunscriptMetadata = (funscript: Funscript): Funscript => {
 
     output.actions = output.actions.sort((a: Action, b: Action) => a.at - b.at).map(roundAction);
     const duration = output.actions.slice(-1)[0].at;
-
+    // 平均速度
     const averageSpeed =
         output.actions.reduce((acc, action, index) => {
             if (index === 0) return acc;
@@ -28,11 +28,27 @@ export const addFunscriptMetadata = (funscript: Funscript): Funscript => {
             return acc + speed;
         }, 0) /
         (output.actions.length - 1);
+    
+    // 最大速度
+    const maxSpeed = output.actions.reduce((acc, action, index) => {
+        if (index === 0) return acc;
+        const speed = getSpeed(output.actions[index - 1], output.actions[index]);
+        return Math.max(acc, speed);
+    }, 0);
+
+    // 最小速度
+    const minSpeed = output.actions.reduce((acc, action, index) => {
+        if (index === 0) return acc;
+        const speed = getSpeed(output.actions[index - 1], output.actions[index]);
+        return Math.min(acc, speed);
+    }, 0);
 
     output.metadata = {
         ...output.metadata,
         duration,
         average_speed: averageSpeed,
+        max_speed: maxSpeed,
+        min_speed: minSpeed,
     };
     if ((output as any).rawActions) delete (output as any).rawActions;
     return output;

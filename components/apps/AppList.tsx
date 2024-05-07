@@ -22,6 +22,8 @@ const readFileAsync = async (file: File): Promise<string> => {
 interface FunscriptInfo {
     title: string;
     averageSpeed: number;
+    maxSpeed: number;
+    minSpeed: number;
     actionCount: number;
     duration: number;
     firstActionAt: number;
@@ -77,8 +79,10 @@ const AppList = (): JSX.Element => {
             funscripts
                 .map(f => {
                     return {
-                        title: f.metadata?.title || "",
+                        title: f.metadata?.title + '.funscript' || "" + '.funscript',
                         averageSpeed: f.metadata?.average_speed || 0,
+                        maxSpeed: f.metadata?.max_speed || 0,
+                        minSpeed: f.metadata?.min_speed || 0,
                         actionCount: f.actions.length || 0,
                         duration: f.actions.slice(-1)[0].at,
                         firstActionAt: f.actions[0].at,
@@ -100,14 +104,21 @@ const AppList = (): JSX.Element => {
         const color = getColor(info.averageSpeed || 0);
         const colorString = formatColor(color);
         return (
-            <li className="flex flex-col border border-black rounded">
-                <div className="w-full grid grid-cols-8 items-center h-8 text-sm px-4 border-b border-black">
-                    <span className="col-span-6">{info.title}</span>
-                    <span className="text-right">
+            <li className="flex flex-col border border-white rounded">
+                <div className="w-full grid grid-cols-12 items-center h-8 text-sm px-4 border-b border-black">
+                    <span className="col-span-4">{info.title}</span>
+                    {/* <span className="text-right">
                         {numeral(info.duration / 1000).format("00:00:00")}
+                    </span> */}
+                    <span className="col-span-2">{info.actionCount}</span>
+                    <span className="col-span-2" style={{ color: colorString }}>
+                        {Math.round(info.maxSpeed)} unit/s
                     </span>
-                    <span className="text-right" style={{ color: colorString }}>
-                        {Math.round(info.averageSpeed)}
+                    <span className="col-span-2" style={{ color: colorString }}>
+                        {Math.round(info.minSpeed)} unit/s
+                    </span>
+                    <span className="col-span-2" style={{ color: colorString }}>
+                        {Math.round(info.averageSpeed)} unit/s
                     </span>
                 </div>
                 <FunscriptHeatmap className="w-full h-8" funscript={info.funscript} />
@@ -149,10 +160,13 @@ const AppList = (): JSX.Element => {
                             />
                             <ul className="flex flex-col gap-2 mt-4 mb-8">
                                 <li className="flex flex-col border border-black rounded">
-                                    <div className="w-full grid grid-cols-8 items-center h-8 text-sm px-4 font-bold bg-neutral-800">
-                                        <span className="col-span-6">Filename</span>
-                                        <span className="text-right">Duration</span>
-                                        <span className="text-right">Average Speed</span>
+                                    <div className="w-full grid grid-cols-12 items-center h-8 text-sm px-4 font-bold bg-neutral-800">
+                                        <span className="col-span-4">Filename</span>
+                                        <span className="col-span-2">Action Count</span>
+                                        {/* <span className="text-right">Duration</span> */}
+                                        <span className="col-span-2">Max Speed</span>
+                                        <span className="col-span-2">Min Speed</span>
+                                        <span className="col-span-2">Average Speed</span>
                                     </div>
                                 </li>
                                 {funscriptInfo.map(info => (
