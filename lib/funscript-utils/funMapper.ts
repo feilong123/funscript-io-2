@@ -70,6 +70,7 @@ export interface HeatmapOptions {
     solid?: boolean;
 }
 const defaultHeatmapOptions: HeatmapOptions = {
+    background: "#ffffff",
     lineWidth: 2,
     colorSmoothing: 5,
 };
